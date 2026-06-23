@@ -1587,104 +1587,6 @@
       line-height: 1.4;
     }
 
-    /* ── DYNAMIC OUTREACH TOOL & TARGET BOARDS ── */
-    .outreach-builder {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @media (max-width: 768px) {
-      .outreach-builder {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .outreach-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .outreach-templates-tabs {
-      display: flex;
-      gap: 0.4rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 1rem;
-      overflow-x: auto;
-      padding-bottom: 1px;
-    }
-
-    .outreach-tab-btn {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      padding: 0.4rem 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .outreach-tab-btn.active {
-      color: var(--neon-cyan);
-      border-bottom-color: var(--neon-cyan);
-    }
-
-    .outreach-preview-box {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.2rem;
-      position: relative;
-    }
-
-    .outreach-preview-text {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      min-height: 180px;
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
-
-    .outreach-preview-text span {
-      background: rgba(0, 240, 255, 0.1);
-      border-bottom: 1px dashed var(--neon-cyan);
-      color: var(--neon-cyan);
-      padding: 0 0.2rem;
-      border-radius: 2px;
-    }
-
-    .copy-outreach-btn {
-      position: absolute;
-      top: 0.8rem;
-      right: 0.8rem;
-      background: var(--terminal-bg);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      padding: 0.3rem 0.65rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .copy-outreach-btn:hover {
-      color: var(--neon-cyan);
-      border-color: var(--neon-cyan);
-    }
-
-    .copy-outreach-btn.copied {
-      color: var(--neon-green);
-      border-color: var(--neon-green);
-    }
-
     /* Target Grid Card list */
     .targets-title {
       font-family: var(--font-mono);
@@ -2831,150 +2733,32 @@
           </div>
         </div>
 
-        <!-- Smart Contract Code Vault Section -->
         <div class="section-card">
           <div class="section-header-flex">
             <div class="section-title">Anchor Code Vault</div>
-            <div class="section-subtitle-tag">On-Chain Source</div>
+            <div class="section-subtitle-tag">On-Chain Overview</div>
           </div>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;">
-            Explore the Anchor smart contract implementations that power the DApps simulated above. Built using Solana's standard program structures, account models, and CPI patterns.
+            The implementation details stay hidden here for a cleaner mobile experience. The vault now highlights the architecture and what each simulated program does instead of showing raw Rust source.
           </p>
 
-          <!-- Tab Selectors -->
-          <div class="vault-selector">
-            <button class="vault-tab-btn active" onclick="switchCodeTab('launchpad-code', this)">token_launchpad.rs</button>
-            <button class="vault-tab-btn" onclick="switchCodeTab('yield-code', this)">yield_vault.rs</button>
-            <button class="vault-tab-btn" onclick="switchCodeTab('multisig-code', this)">multisig.rs</button>
-          </div>
-
-          <div class="code-vault-layout">
-            <!-- Left Code Window -->
-            <div class="vault-code-wrapper">
-              <div class="vault-code-header">
-                <div class="vault-code-title" id="vault-code-title">programs/token-launchpad/src/lib.rs</div>
-                <button class="copy-code-btn" id="copy-code-btn" onclick="copyActiveCode()">Copy Code</button>
-              </div>
-              <pre class="code-container"><code class="language-rust" id="code-display">use anchor_lang::prelude::*;
-use anchor_spl::{
-    token::{self, Mint, Token, TokenAccount, MintTo},
-    metadata::{create_metadata_accounts_v3, CreateMetadataAccountsV3, Metadata},
-};
-
-declare_id!("TknLch1111111111111111111111111111111111112");
-
-#[program]
-pub mod token_launchpad {
-    use super::*;
-
-    pub fn mint_token(
-        ctx: Context<MintToken>, 
-        name: String, 
-        symbol: String, 
-        uri: String, 
-        amount: u64
-    ) -> Result<()> {
-        // 1. Create Metaplex metadata for the new token
-        let cpi_program = ctx.accounts.metadata_program.to_account_info();
-        let cpi_accounts = CreateMetadataAccountsV3 {
-            metadata: ctx.accounts.metadata_account.to_account_info(),
-            mint: ctx.accounts.mint.to_account_info(),
-            mint_authority: ctx.accounts.payer.to_account_info(),
-            payer: ctx.accounts.payer.to_account_info(),
-            update_authority: ctx.accounts.payer.to_account_info(),
-            system_program: ctx.accounts.system_program.to_account_info(),
-            rent: ctx.accounts.rent.to_account_info(),
-        };
-        
-        // CPI Call to Metaplex
-        // details omitted for readability...
-        
-        // 2. Mint tokens to user's Associated Token Account
-        let cpi_mint_program = ctx.accounts.token_program.to_account_info();
-        let cpi_mint_accounts = MintTo {
-            mint: ctx.accounts.mint.to_account_info(),
-            to: ctx.accounts.destination.to_account_info(),
-            authority: ctx.accounts.payer.to_account_info(),
-        };
-        
-        token::mint_to(
-            CpiContext::new(cpi_mint_program, cpi_mint_accounts),
-            amount
-        )?;
-        Ok(())
-    }
-}</code></pre>
+          <div class="vault-summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div class="board-card">
+              <div class="board-name">Token Launchpad</div>
+              <div class="board-desc">Initializes mint accounts, attaches metadata, and simulates token distribution workflows.</div>
             </div>
-
-            <!-- Right Explainer Notes -->
-            <div class="code-explainer-panel" id="explainer-panel">
-              <div class="explainer-title">Security & Program Analysis</div>
-              <div class="explainer-points" id="explainer-points">
-                <div class="explainer-point">
-                  <div class="explainer-point-lbl">PDA Derivation</div>
-                  <div class="explainer-point-desc">Uses Program Derived Addresses (PDAs) for Metaplex accounts, safely mapped under seeds specifying the token program and mint address.</div>
-                </div>
-                <div class="explainer-point">
-                  <div class="explainer-point-lbl">Constraint Verification</div>
-                  <div class="explainer-point-desc">Anchor's account macros validate that signer and authority accounts match expectations, mitigating spoofing vectors.</div>
-                </div>
-                <div class="explainer-point">
-                  <div class="explainer-point-lbl">CPI execution</div>
-                  <div class="explainer-point-desc">Cross-Program Invocation (CPI) invokes the native Token Program and Metaplex Metadata Program securely via program signatures.</div>
-                </div>
-              </div>
+            <div class="board-card">
+              <div class="board-name">Yield Vault</div>
+              <div class="board-desc">Tracks deposits, share issuance, and auto-compounding reward flow for the vault simulation.</div>
+            </div>
+            <div class="board-card">
+              <div class="board-name">Multisig Safe</div>
+              <div class="board-desc">Models threshold approvals, signer validation, and controlled execution for treasury actions.</div>
             </div>
           </div>
         </div>
 
-        <!-- Dynamic Outreach DM Generator & Job Target Board -->
         <div class="section-card">
-          <div class="section-header-flex">
-            <div class="section-title">Outreach Workspace</div>
-            <div class="section-subtitle-tag">Personalization Engine</div>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Generate high-converting, tailored cold outreach messages for Web3 recruiters. Select a template and modify inputs to customize in real time.
-          </p>
-
-          <div class="outreach-builder">
-            <div class="outreach-inputs">
-              <div class="form-group">
-                <label class="form-label">Recruiter / Contact Name</label>
-                <input type="text" class="form-input" id="outreach-recruiter" value="Alex" oninput="generateOutreach()">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Project / Ecosystem Name</label>
-                <input type="text" class="form-input" id="outreach-project" value="Jupiter" oninput="generateOutreach()">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Target Role</label>
-                <input type="text" class="form-input" id="outreach-role" value="Web3 Full-Stack Developer" oninput="generateOutreach()">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Project Focus Area</label>
-                <input type="text" class="form-input" id="outreach-focus" value="expanding liquidity routers" oninput="generateOutreach()">
-              </div>
-            </div>
-
-            <div>
-              <div class="outreach-templates-tabs">
-                <button class="outreach-tab-btn active" onclick="switchOutreachTab('twitter', this)">X / Twitter DM</button>
-                <button class="outreach-tab-btn" onclick="switchOutreachTab('discord', this)">Discord</button>
-                <button class="outreach-tab-btn" onclick="switchOutreachTab('linkedin', this)">LinkedIn</button>
-                <button class="outreach-tab-btn" onclick="switchOutreachTab('cold', this)">Cold Email</button>
-              </div>
-
-              <div class="outreach-preview-box">
-                <button class="copy-outreach-btn" id="copy-outreach-btn" onclick="copyOutreachText()">Copy</button>
-                <div class="outreach-preview-text" id="outreach-preview-display"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Active Solana Projects Grid -->
           <div class="targets-title">// Active Solana Ecosystems to Target</div>
           <div class="targets-grid">
             
@@ -3035,8 +2819,6 @@ pub mod token_launchpad {
             </div>
 
           </div>
-
-          <div class="divider"></div>
 
           <!-- Job Board Links -->
           <div class="targets-title">// Best Web3 Hiring Databases</div>
@@ -3192,7 +2974,6 @@ pub mod token_launchpad {
       multisigExecuted: false,
       activePowTab: "launchpad",
       activeCodeTab: "launchpad-code",
-      activeOutreachTab: "twitter",
       pendingSigResolve: null,
       pendingSigReject: null,
       
@@ -3388,7 +3169,6 @@ pub struct TxProposal {
 
     // ── INITIALIZATION ──
     window.addEventListener('DOMContentLoaded', () => {
-      generateOutreach();
       updatePing();
       updateBlocks();
       drawInitialChart();
@@ -3564,49 +3344,6 @@ pub struct TxProposal {
       document.getElementById(`pow-${tabId}`).classList.add('active');
       
       logToTerminal(`[SYS] Switched sandbox focus to ${tabId.toUpperCase()} simulation.`, 'sys');
-    }
-
-    function switchCodeTab(tabId, btn) {
-      state.activeCodeTab = tabId;
-      document.querySelectorAll('.vault-tab-btn').forEach(b => {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-
-      const data = codeDatabase[tabId];
-      if (data) {
-        document.getElementById('vault-code-title').textContent = data.title;
-        const codeElement = document.getElementById('code-display');
-        codeElement.textContent = data.code;
-        
-        // Re-trigger syntax highlighting
-        Prism.highlightElement(codeElement);
-
-        // Update explanation notes
-        const explainerContainer = document.getElementById('explainer-points');
-        explainerContainer.innerHTML = '';
-        data.explainers.forEach(exp => {
-          const item = document.createElement('div');
-          item.className = 'explainer-point';
-          item.innerHTML = `
-            <div class="explainer-point-lbl">${exp.label}</div>
-            <div class="explainer-point-desc">${exp.desc}</div>
-          `;
-          explainerContainer.appendChild(item);
-        });
-
-        logToTerminal(`[SYS] Loaded smart contract source: ${data.title}`, 'sys');
-      }
-    }
-
-    function copyActiveCode() {
-      const code = document.getElementById('code-display').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        const btn = document.getElementById('copy-code-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy Code', 2000);
-        logToTerminal('[SYS] Source code copied to clipboard.', 'sys');
-      });
     }
 
     // ── SIMULATION LOGIC: TOKEN LAUNCHPAD ──
@@ -3888,70 +3625,6 @@ pub struct TxProposal {
       } catch (err) {
         logToTerminal('[WALLET] Transaction signature rejected by user.', 'tx');
       }
-    }
-
-    // ── OUTREACH MESSAGE GENERATOR ──
-    const outreachTemplates = {
-      twitter: `Hey {recruiter} 👋 I've been following {project} — love what you're building around {focus}.\n\nI'm a full-stack dev with Solana experience. I build on-chain programs with Anchor and ship clean React/Next.js frontends with TypeScript.\n\nI'd love to contribute as a {role}. Open to a quick chat?`,
-      
-      discord: `Hey {recruiter}! I've been active in the server and really excited about what {project} is building around {focus}.\n\nI'm a Solana full-stack dev — Anchor programs, React/Next.js + TypeScript frontends, end-to-end. I noticed you're working on new integrations and think I could add real value as a {role}.\n\nIs the team open to contributors or is there a hiring process I should follow?`,
-      
-      linkedin: `Hi {recruiter},\n\nI came across {project} and was impressed by your approach to {focus}.\n\nI'm a full-stack developer with hands-on Solana experience — building on-chain programs, DeFi tooling, and consumer-facing dApps with React/Next.js and TypeScript. I'm actively looking to join an early-stage Web3 team as a {role} where I can make a real impact.\n\nWould love to connect and explore if there's a fit.`,
-      
-      cold: `Subject: Solana Full-Stack Dev — Interested in {project}\n\nHey {recruiter},\n\nI've been building on Solana for a while — smart contracts via Anchor, frontends in React/Next.js with TypeScript, and the full stack in between. I came across {project} and the problem you're solving around {focus} genuinely excites me.\n\nI'd love to jump in and contribute as a {role}. Happy to do a small test task or chat async — whatever works for you.\n\n— Victor`
-    };
-
-    function generateOutreach() {
-      const recruiter = document.getElementById('outreach-recruiter').value || '[Recruiter Name]';
-      const project = document.getElementById('outreach-project').value || '[Project Name]';
-      const role = document.getElementById('outreach-role').value || '[Target Role]';
-      const focus = document.getElementById('outreach-focus').value || '[Focus Area]';
-
-      let template = outreachTemplates[state.activeOutreachTab];
-      
-      // Inject variables with span highlights for previewing
-      let formattedText = template
-        .replace(/{recruiter}/g, `<span>${recruiter}</span>`)
-        .replace(/{project}/g, `<span>${project}</span>`)
-        .replace(/{role}/g, `<span>${role}</span>`)
-        .replace(/{focus}/g, `<span>${focus}</span>`);
-
-      document.getElementById('outreach-preview-display').innerHTML = formattedText;
-    }
-
-    function switchOutreachTab(tabId, btn) {
-      state.activeOutreachTab = tabId;
-      document.querySelectorAll('.outreach-tab-btn').forEach(b => {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-      generateOutreach();
-    }
-
-    function copyOutreachText() {
-      // Get plain text of templates
-      const recruiter = document.getElementById('outreach-recruiter').value || '[Recruiter Name]';
-      const project = document.getElementById('outreach-project').value || '[Project Name]';
-      const role = document.getElementById('outreach-role').value || '[Target Role]';
-      const focus = document.getElementById('outreach-focus').value || '[Focus Area]';
-
-      let rawText = outreachTemplates[state.activeOutreachTab]
-        .replace(/{recruiter}/g, recruiter)
-        .replace(/{project}/g, project)
-        .replace(/{role}/g, role)
-        .replace(/{focus}/g, focus);
-
-      navigator.clipboard.writeText(rawText).then(() => {
-        const btn = document.getElementById('copy-outreach-btn');
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
-        
-        logToTerminal(`[SYS] Custom outreach DM copied for ${project}.`, 'sys');
-      });
     }
 
     // ── CRYPTOGRAPHIC CONTACT FORM SUBMISSION ──
